@@ -3,9 +3,11 @@ package com.kalamburya.booking_system.service;
 import com.kalamburya.booking_system.entity.Room;
 import com.kalamburya.booking_system.exception.RoomNotFoundException;
 import com.kalamburya.booking_system.repository.RoomRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class RoomService {
 
     private final RoomRepository repository;
