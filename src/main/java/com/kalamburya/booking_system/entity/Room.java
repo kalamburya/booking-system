@@ -7,17 +7,12 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "rooms")
 public class Room {
-
-    public Room(String description,
-                Byte capacity,
-                BigDecimal price,
-                RoomType type,
-                String number) {
-        this.description = description;
-        this.capacity = capacity;
-        this.price = price;
-        this.type = type;
+    public Room(String number, RoomType type, BigDecimal price, int capacity, String description) {
         this.number = number;
+        this.type = type;
+        this.price = price;
+        this.capacity = capacity;
+        this.description = description;
     }
 
     public Room() {}
