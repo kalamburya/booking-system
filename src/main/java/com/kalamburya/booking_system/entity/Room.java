@@ -7,15 +7,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "rooms")
 public class Room {
-    public Room(String number, RoomType type, BigDecimal price, int capacity, String description) {
-        this.number = number;
-        this.type = type;
-        this.price = price;
-        this.capacity = capacity;
-        this.description = description;
-    }
-
-    public Room() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +29,18 @@ public class Room {
     @Column(name = "room_description")
     private String description;
 
-    public Long getId() {
-        return id;
+    public Room(String number, RoomType type, BigDecimal price, int capacity, String description) {
+        this.number = number;
+        this.type = type;
+        this.price = price;
+        this.capacity = capacity;
+        this.description = description;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Room() {}
+
+    public Long getId() {
+        return id;
     }
 
     public String getNumber() {
