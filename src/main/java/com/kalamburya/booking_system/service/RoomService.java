@@ -32,17 +32,17 @@ public class RoomService {
         return repository.findAll();
     }
 
-    public Room updateRoom(Long id, Room roomToUpdate){
+    public Room updateRoom(Long id, Room newRoom){
 
-        Room oldRoom = getRoomById(id);
+        Room roomToUpdate = getRoomById(id);
 
-        oldRoom.setNumber(roomToUpdate.getNumber());
-        oldRoom.setType(roomToUpdate.getType());
-        oldRoom.setPrice(roomToUpdate.getPrice());
-        oldRoom.setCapacity(roomToUpdate.getCapacity());
-        oldRoom.setDescription(roomToUpdate.getDescription());
+        roomToUpdate.setNumber(newRoom.getNumber());
+        roomToUpdate.setType(newRoom.getType());
+        roomToUpdate.setPrice(newRoom.getPrice());
+        roomToUpdate.setCapacity(newRoom.getCapacity());
+        roomToUpdate.setDescription(newRoom.getDescription());
 
-        return repository.save(oldRoom);
+        return repository.save(roomToUpdate);
     }
 
     public void deleteRoom(Long id){
