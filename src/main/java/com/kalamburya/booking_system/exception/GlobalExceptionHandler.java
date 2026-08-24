@@ -21,16 +21,20 @@ public class GlobalExceptionHandler {
         return notFoundHandle(exc);
     }
 
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBookingNotFound(BookingNotFoundException exc){
+
+        return notFoundHandle(exc);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException exc) {
+        return conflictHandle(exc);
+    }
 
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    @ExceptionHandler(RoomNotAvailableException.class)
+    public ResponseEntity<ErrorResponse> handleRoomNotAvailable(RoomNotAvailableException exc) {
+        return conflictHandle(exc);
     }
 
     private ResponseEntity<ErrorResponse> notFoundHandle(RuntimeException exc) {
@@ -42,6 +46,15 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    private ResponseEntity<ErrorResponse> conflictHandle(RuntimeException exc) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                exc.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
 }
