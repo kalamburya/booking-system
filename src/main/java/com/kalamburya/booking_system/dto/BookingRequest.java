@@ -11,10 +11,6 @@ public class BookingRequest {
     @NotNull
     private Long roomId;
 
-    @Min(value = 1)
-    @NotNull
-    private Long userId;
-
     @NotNull
     private LocalDate checkIn;
 
@@ -30,14 +26,6 @@ public class BookingRequest {
 
     public void setRoomId(Long roomId) {
         this.roomId = roomId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public LocalDate getCheckIn() {

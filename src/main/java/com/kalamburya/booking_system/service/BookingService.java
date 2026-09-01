@@ -1,12 +1,10 @@
 package com.kalamburya.booking_system.service;
 
-import com.kalamburya.booking_system.entity.Booking;
-import com.kalamburya.booking_system.entity.BookingStatus;
-import com.kalamburya.booking_system.entity.Room;
-import com.kalamburya.booking_system.entity.User;
+import com.kalamburya.booking_system.entity.*;
 import com.kalamburya.booking_system.exception.BookingNotFoundException;
 import com.kalamburya.booking_system.exception.RoomNotAvailableException;
 import com.kalamburya.booking_system.repository.BookingRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -61,10 +59,17 @@ public class BookingService {
         return repository.findByUserId(userId);
     }
 
-    public void cancelBooking(Long bookingId) {
+    public void cancelBooking(Long bookingId, User currentUser) {
 
         Booking booking = repository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException(bookingId));
+
+        boolean isOwner = booking.getUser().getId().equals(currentUser.getId());
+        boolean isAdmin = currentUser.getRole() == UserRole.ADMIN;
+
+        if (!isOwner && !isAdmin) {
+            throw new AccessDeniedException("You can cancel only your own bookings");
+        }
 
         booking.setStatus(BookingStatus.CANCELLED);
 
