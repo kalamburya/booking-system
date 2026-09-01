@@ -37,6 +37,11 @@ public class GlobalExceptionHandler {
         return conflictHandle(exc);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException exc) {
+        return conflictHandle(exc);
+    }
+
     private ResponseEntity<ErrorResponse> notFoundHandle(RuntimeException exc) {
 
         ErrorResponse error = new ErrorResponse(

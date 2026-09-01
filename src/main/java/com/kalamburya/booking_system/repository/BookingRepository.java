@@ -1,6 +1,7 @@
 package com.kalamburya.booking_system.repository;
 
 import com.kalamburya.booking_system.entity.Booking;
+import com.kalamburya.booking_system.entity.BookingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +27,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("checkIn") LocalDate checkIn,
             @Param("checkOut") LocalDate checkOut
             );
+
+    @Query("SELECT COUNT(b) > 0 FROM Booking b " +
+            "WHERE b.user.id = :userId AND b.status <> 'CANCELLED'")
+    boolean existsActiveBookingForUser(@Param("userId") Long userId);
 }
