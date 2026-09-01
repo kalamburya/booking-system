@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookingService {
@@ -32,6 +31,10 @@ public class BookingService {
                                  Long roomId,
                                  LocalDate checkIn,
                                  LocalDate checkOut) {
+
+        if (checkIn.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Check-in date cannot be in the past");
+        }
 
         if (!checkOut.isAfter(checkIn)) {
             throw new IllegalArgumentException("Check-out date isn't after check-in date");
