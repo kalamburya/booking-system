@@ -17,6 +17,8 @@ public class UserResponse {
 
     private UserRole role;
 
+    private LocalDateTime createdAt;
+
     public UserResponse() {}
 
     public static UserResponse of(User user) {
@@ -79,6 +81,4 @@ public class UserResponse {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
-    private LocalDateTime createdAt;
 }
