@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
 
         List<UserResponse> users =  userService
@@ -54,30 +56,30 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id,
+                                                    @AuthenticationPrincipal User currentUser) {
 
-        User user = userService.getUserById(id);
+        User user = userService.getUserByIdWithAccessCheck(id, currentUser);
 
         return ResponseEntity.ok(UserResponse.of(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
+                                                   @Valid @RequestBody UserUpdateRequest request,
+                                                   @AuthenticationPrincipal User currentUser) {
 
-        User updatedUser = userService.updateUser(id, request);
+        User updatedUser = userService.updateUser(id, request, currentUser);
 
         return ResponseEntity.ok(UserResponse.of(updatedUser));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id,
+                                           @AuthenticationPrincipal User currentUser) {
 
-        userService.deleteUser(id);
+        userService.deleteUser(id, currentUser);
 
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 }

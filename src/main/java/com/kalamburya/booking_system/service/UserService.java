@@ -2,9 +2,11 @@ package com.kalamburya.booking_system.service;
 
 import com.kalamburya.booking_system.dto.UserUpdateRequest;
 import com.kalamburya.booking_system.entity.User;
+import com.kalamburya.booking_system.entity.UserRole;
 import com.kalamburya.booking_system.exception.UserNotFoundException;
 import com.kalamburya.booking_system.repository.BookingRepository;
 import com.kalamburya.booking_system.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,19 +50,30 @@ public class UserService {
         return repository.findAll();
     }
 
-    public User updateUser(Long id, UserUpdateRequest request) {
+    public User getUserByIdWithAccessCheck(Long id, User currentUser) {
+        User user = getUserById(id);
+        if (!isSelfOrAdmin(user, currentUser)) {
+            throw new AccessDeniedException("You can view only your own profile");
+        }
+        return user;
+    }
 
+    public User updateUser(Long id, UserUpdateRequest request, User currentUser) {
         User userToUpdate = getUserById(id);
+        if (!isSelfOrAdmin(userToUpdate, currentUser)) {
+            throw new AccessDeniedException("You can update only your own profile");
+        }
 
         userToUpdate.setFirstName(request.getFirstName());
         userToUpdate.setLastName(request.getLastName());
-
         return repository.save(userToUpdate);
     }
 
-    public void deleteUser(Long id) {
-
+    public void deleteUser(Long id, User currentUser) {
         User user = getUserById(id);
+        if (!isSelfOrAdmin(user, currentUser)) {
+            throw new AccessDeniedException("You can delete only your own account");
+        }
 
         if (bookingRepository.existsActiveBookingForUser(id)) {
             throw new IllegalStateException("Cannot delete user with active bookings");
@@ -69,5 +82,9 @@ public class UserService {
         repository.delete(user);
     }
 
-
+    private boolean isSelfOrAdmin(User target, User currentUser) {
+        boolean isSelf = target.getId().equals(currentUser.getId());
+        boolean isAdmin = currentUser.getRole() == UserRole.ADMIN;
+        return isSelf || isAdmin;
+    }
 }

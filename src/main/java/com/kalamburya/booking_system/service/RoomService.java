@@ -32,9 +32,13 @@ public class RoomService {
         return repository.findAll();
     }
 
-    public Room updateRoom(Long id, Room newRoom){
-
+    public Room updateRoom(Long id, Room newRoom) {
         Room roomToUpdate = getRoomById(id);
+
+        if (!roomToUpdate.getNumber().equals(newRoom.getNumber())
+                && repository.existsByNumber(newRoom.getNumber())) {
+            throw new IllegalArgumentException("Room with number " + newRoom.getNumber() + " already exists");
+        }
 
         roomToUpdate.setNumber(newRoom.getNumber());
         roomToUpdate.setType(newRoom.getType());
